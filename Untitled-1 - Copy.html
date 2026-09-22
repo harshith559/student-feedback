@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Feedback</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background #f9f5f1;
+      color: #0644a7;
+    }
+
+    /* Navbar */
+    .navbar {
+      background: #4f46e5;
+      color: white;
+      padding: 18px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .navbar h1 {
+      font-size: 24px;
+    }
+
+    .navbar span {
+      font-size: 14px;
+    }
+
+    /* Main Container */
+    .container {
+      width: 90%;
+      max-width: 1100px;
+      margin: 35px auto;
+    }
+
+    .heading {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .heading h2 {
+      font-size: 30px;
+      color: #312e81;
+      margin-bottom: 8px;
+    }
+
+    .heading p {
+      color: #64748b;
+    }
+
+    /* Cards */
+    .card {
+      background: white;
+      padding: 25px;
+      border-radius: 15px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      margin-bottom: 25px;
+    }
+
+    .card h3 {
+      margin-bottom: 20px;
+      color: #3730a3;
+    }
+
+    /* Form */
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 7px;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #4f46e5;
+    }
+
+    textarea {
+      min-height: 110px;
+      resize: vertical;
+    }
+
+    /* Rating */
+    .rating {
+      display: flex;
+      flex-direction: row-reverse;
+      justify-content: flex-end;
+      gap: 5px;
+    }
+
+    .rating input {
+      display: none;
+    }
+
+    .rating label {
+      font-size: 35px;
+      color: #cbd5e1;
+      cursor: pointer;
+      margin: 0;
+    }
+
+    .rating label:hover,
+    .rating label:hover ~ label,
+    .rating input:checked ~ label {
+      color: #f59e0b;
+    }
+
+    /* Button */
+    .submit-btn {
+      width: 100%;
+      padding: 13px;
+      background: #4f46e5;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background: #3730a3;
+    }
+
+    /* Success Message */
+    #successMessage {
+      display: none;
+      background: #dcfce7;
+      color: #166534;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    /* Dashboard */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .stat {
+      background: #eef2ff;
+      padding: 20px;
+      text-align: center;
+      border-radius: 10px;
+    }
+
+    .stat h4 {
+      color: #6366f1;
+      margin-bottom: 8px;
+    }
+
+    .stat p {
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    /* Feedback List */
+    .feedback-item {
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 12px;
+    }
+
+    .feedback-item h4 {
+      color: #3730a3;
+      margin-bottom: 5px;
+    }
+
+    .stars {
+      color: #f59e0b;
+      margin: 8px 0;
+    }
+
+    .feedback-item p {
+      color: #475569;
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      .stats {
+        grid-template-columns: 1fr;
+      }
+
+      .navbar {
+        padding: 15px 5%;
+      }
+
+      .navbar h1 {
+        font-size: 20px;
+      }
+
+      .container {
+        width: 95%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <h1>🎓 Student Feedback</h1>
+    <span>College Feedback Portal</span>
+  </nav>
+
+  <div class="container">
+
+    <!-- Heading -->
+    <div class="heading">
+      <h2>Student Feedback App</h2>
+      <p>Help us improve your learning experience.</p>
+    </div>
+
+    <!-- Success Message -->
+    <div id="successMessage">
+      ✅ Thank you! Your feedback has been submitted successfully.
+    </div>
+
+    <!-- Feedback Form -->
+    <div class="card">
+      <h3>📝 Submit Your Feedback</h3>
+
+      <form id="feedbackForm">
+
+        <div class="form-group">
+          <label for="studentName">Student Name</label>
+          <input
+            type="text"
+            id="studentName"
+            placeholder="Enter your name"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="rollNumber">Roll Number</label>
+          <input
+            type="text"
+            id="rollNumber"
+            placeholder="Enter roll number"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="course">Course</label>
+
+          <select id="course" required>
+            <option value="">Select Course</option>
+            <option>BCA</option>
+            <option>B.Tech Computer Science</option>
+            <option>B.Sc Computer Science</option>
+            <option>MCA</option>
+            <option>MBA</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="teacher">Teacher</label>
+
+          <select id="teacher" required>
+            <option value="">Select Teacher</option>
+            <option>Dr. Priya Sharma</option>
+            <option>Prof. Rahul Kumar</option>
+            <option>Dr. Anjali Reddy</option>
+            <option>Prof. Suresh Rao</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Rate the Teacher</label>
+
+          <div class="rating">
+            <input type="radio" id="star5" name="rating" value="5" required>
+            <label for="star5">★</label>
+
+            <input type="radio" id="star4" name="rating" value="4">
+            <label for="star4">★</label>
+
+            <input type="radio" id="star3" name="rating" value="3">
+            <label for="star3">★</label>
+
+            <input type="radio" id="star2" name="rating" value="2">
+            <label for="star2">★</label>
+
+            <input type="radio" id="star1" name="rating" value="1">
+            <label for="star1">★</label>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="feedback">Your Feedback</label>
+
+          <textarea
+            id="feedback"
+            placeholder="Write your feedback or suggestions..."
+            required
+          ></textarea>
+        </div>
+
+        <button class="submit-btn" type="submit">
+          Submit Feedback
+        </button>
+
+      </form>
+    </div>
+
+    <!-- Statistics -->
+    <div class="card">
+      <h3>📊 Feedback Dashboard</h3>
+
+      <div class="stats">
+
+        <div class="stat">
+          <h4>Total Feedback</h4>
+          <p id="totalFeedback">0</p>
+        </div>
+
+        <div class="stat">
+          <h4>Average Rating</h4>
+          <p id="averageRating">0 ⭐</p>
+        </div>
+
+        <div class="stat">
+          <h4>Latest Rating</h4>
+          <p id="latestRating">0 ⭐</p>
+        </div>
+
+      </div>
+
+      <div id="feedbackList">
+        <p style="color:#64748b;">
+          No feedback submitted yet.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script>
+
+    // Load existing feedback
+    let feedbackData =
+      JSON.parse(localStorage.getItem("studentFeedback")) || [];
+
+    displayFeedback();
+
+    // Form submission
+    document
+      .getElementById("feedbackForm")
+      .addEventListener("submit", function(event) {
+
+        event.preventDefault();
+
+        const name =
+          document.getElementById("studentName").value;
+
+        const roll =
+          document.getElementById("rollNumber").value;
+
+        const course =
+          document.getElementById("course").value;
+
+        const teacher =
+          document.getElementById("teacher").value;
+
+        const feedback =
+          document.getElementById("feedback").value;
+
+        const rating =
+          document.querySelector(
+            'input[name="rating"]:checked'
+          ).value;
+
+        const newFeedback = {
+          name: name,
+          roll: roll,
+          course: course,
+          teacher: teacher,
+          feedback: feedback,
+          rating: Number(rating),
+          date: new Date().toLocaleString()
+        };
+
+        feedbackData.push(newFeedback);
+
+        // Save to browser
+        localStorage.setItem(
+          "studentFeedback",
+          JSON.stringify(feedbackData)
+        );
+
+        // Show success message
+        document.getElementById(
+          "successMessage"
+        ).style.display = "block";
+
+        // Reset form
+        document.getElementById(
+          "feedbackForm"
+        ).reset();
+
+        displayFeedback();
+
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      });
+
+
+    // Display feedback
+    function displayFeedback() {
+
+      const list =
+        document.getElementById("feedbackList");
+
+      const total =
+        document.getElementById("totalFeedback");
+
+      const average =
+        document.getElementById("averageRating");
+
+      const latest =
+        document.getElementById("latestRating");
+
+      total.textContent = feedbackData.length;
+
+      if (feedbackData.length === 0) {
+
+        average.textContent = "0 ⭐";
+        latest.textContent = "0 ⭐";
+
+        list.innerHTML =
+          '<p style="color:#64748b;">No feedback submitted yet.</p>';
+
+        return;
+      }
+
+      // Calculate average
+      let totalRating = 0;
+
+      feedbackData.forEach(item => {
+        totalRating += item.rating;
+      });
+
+      const avg =
+        totalRating / feedbackData.length;
+
+      average.textContent =
+        avg.toFixed(1) + " ⭐";
+
+      // Latest rating
+      latest.textContent =
+        feedbackData[feedbackData.length - 1].rating +
+        " ⭐";
+
+      // Clear list
+      list.innerHTML = "";
+
+      // Display newest first
+      [...feedbackData]
+        .reverse()
+        .forEach(item => {
+
+          const div =
+            document.createElement("div");
+
+          div.className = "feedback-item";
+
+          div.innerHTML = `
+            <h4>
+              ${escapeHTML(item.name)}
+              — ${escapeHTML(item.teacher)}
+            </h4>
+
+            <small>
+              Roll No: ${escapeHTML(item.roll)}
+              | Course: ${escapeHTML(item.course)}
+            </small>
+
+            <div class="stars">
+              ${"★".repeat(item.rating)}
+              ${"☆".repeat(5 - item.rating)}
+            </div>
+
+            <p>
+              ${escapeHTML(item.feedback)}
+            </p>
+
+            <small style="color:#94a3b8;">
+              ${item.date}
+            </small>
+          `;
+
+          list.appendChild(div);
+        });
+    }
+
+
+    // Prevent HTML injection in displayed feedback
+    function escapeHTML(text) {
+
+      const div = document.createElement("div");
+
+      div.textContent = text;
+
+      return div.innerHTML;
+    }
+
+  </script>
+
+</body>
+</html>
